@@ -1,5 +1,5 @@
 #!/bin/bash
-# SFT training for Qwen3-VL-8B on failure_v1 dataset using all 8 GPUs
+# SFT training for Qwen3-VL-8B on failure_v2 dataset using all 8 GPUs
 
 export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
 export FORCE_TORCHRUN=1
@@ -12,14 +12,16 @@ export LD_LIBRARY_PATH=/opt/conda/envs/llamafactory/lib:/usr/local/cuda/lib64:/u
 # Use cached model files only — avoids HF Hub timeout when 8 ranks hit the API simultaneously
 export HF_HUB_OFFLINE=1
 
+# New run — WandB will auto-create a fresh run ID
+
 LOG_DIR=logs
 mkdir -p "$LOG_DIR"
-LOG_FILE="$LOG_DIR/qwen3vl_8b_sft_failurev1_$(date +%Y%m%d_%H%M%S).log"
+LOG_FILE="$LOG_DIR/qwen3vl_8b_sft_failurev2_$(date +%Y%m%d_%H%M%S).log"
 
 echo "Training started at $(date)"
 echo "Log file: $LOG_FILE"
 
-nohup llamafactory-cli train examples/train_full/qwen3vl_8b_sft_failurev1.yaml \
+nohup llamafactory-cli train examples/train_full/qwen3vl_8b_sft_failurev2.yaml \
     > "$LOG_FILE" 2>&1 &
 
 echo "PID: $!"

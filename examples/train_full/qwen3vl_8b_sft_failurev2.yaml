@@ -9,23 +9,24 @@ stage: sft
 do_train: true
 finetuning_type: full
 freeze_vision_tower: true
-freeze_multi_modal_projector: true
+freeze_multi_modal_projector: false
 freeze_language_model: false
 deepspeed: examples/deepspeed/ds_z3_config.json
 
 ### dataset
 dataset_dir: data
-dataset: failure_v1
-media_dir: dataset/datasetv1
+dataset: failure_v2
+media_dir: data/failurev2/datasetv2
 template: qwen3_vl_nothink
 cutoff_len: 3072
 preprocessing_num_workers: 16
 dataloader_num_workers: 4
 
 ### output
-output_dir: saves/qwen3-vl-8b/full/sft-failurev1
-logging_steps: 10
-save_steps: 50
+output_dir: saves/qwen3-vl-8b/full/sft-failurev2-proj
+logging_steps: 20
+save_steps: 200
+save_total_limit: 5
 plot_loss: true
 overwrite_output_dir: true
 save_only_model: false
@@ -41,10 +42,12 @@ warmup_ratio: 0.1
 weight_decay: 0.01
 bf16: true
 ddp_timeout: 180000000
-resume_from_checkpoint: null
 
 ### eval
 val_size: 0.05
 per_device_eval_batch_size: 1
 eval_strategy: steps
-eval_steps: 50
+eval_steps: 200
+load_best_model_at_end: true
+metric_for_best_model: eval_loss
+greater_is_better: false
